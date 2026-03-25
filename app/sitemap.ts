@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select('url_slug, updated_at')
     .eq('status', 'active')
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://referio.io'
 
   const staticPages: MetadataRoute.Sitemap = [
     {

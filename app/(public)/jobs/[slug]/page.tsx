@@ -45,7 +45,7 @@ export async function generateMetadata({
     description,
     openGraph: { title, description, type: 'article' },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/jobs/${slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://referio.io'}/jobs/${slug}`,
     },
   }
 }
