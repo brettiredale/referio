@@ -1,6 +1,12 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend() {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 
 const FROM = 'Referio <hello@referio.io>'
 const ADMIN_EMAIL = 'brett@referio.io'
@@ -23,7 +29,7 @@ export async function sendReferralConfirmation({
   referralFee: number
   feeCurrency: string
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: `Your referral for ${refereeName} has been submitted`,
@@ -69,7 +75,7 @@ export async function sendAdminReferralAlert({
   referrerEmail: string
   pushStatus: string
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `[New Referral] ${refereeName} for ${jobTitle} at ${companyName}`,
