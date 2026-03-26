@@ -2,13 +2,53 @@
 
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function HomeNav() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [userName, setUserName] = useState<string | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        // Try to get name from referrers table
+        supabase
+          .from('referrers')
+          .select('full_name')
+          .eq('id', data.user.id)
+          .single()
+          .then(({ data: referrer }) => {
+            setUserName(referrer?.full_name ?? data.user!.email ?? null)
+          })
+      }
+    })
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    setUserName(null)
+    setMenuOpen(false)
+    window.location.href = '/'
+  }
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-40 backdrop-blur-md">
@@ -23,12 +63,51 @@ export default function HomeNav() {
           >
             Browse Jobs
           </Link>
-          <a
-            href="mailto:hello@referio.io"
-            className="text-sm font-medium text-secondary transition hover:text-primary"
-          >
-            Post a Job
-          </a>
+
+          {userName ? (
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center gap-1.5 text-sm font-medium text-secondary transition hover:text-primary"
+              >
+                {userName}
+                <svg
+                  className={`h-3.5 w-3.5 transition-transform ${menuOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-lg border border-border bg-surface py-1 shadow-lg">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-secondary transition hover:bg-border hover:text-primary"
+                  >
+                    My Referrals
+                  </Link>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-secondary transition hover:bg-border hover:text-primary"
+                  >
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full px-4 py-2 text-left text-sm text-secondary transition hover:bg-border hover:text-primary"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : null}
+
           {mounted && (
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
