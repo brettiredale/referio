@@ -7,7 +7,7 @@ export default function HomeHero() {
         <h1 className="font-serif text-5xl font-bold leading-tight text-primary sm:text-7xl">
           Your network
           <br />
-          is worth more.
+          is worth <span className="text-accent">gold</span>.
         </h1>
         <p className="mt-6 max-w-[520px] text-lg leading-relaxed text-secondary">
           Referio connects professionals who know exceptional talent with
