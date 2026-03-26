@@ -18,7 +18,6 @@ export default function HomeNav() {
     const supabase = createClient()
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
-        // Try to get name from referrers table
         supabase
           .from('referrers')
           .select('full_name')
@@ -31,7 +30,6 @@ export default function HomeNav() {
     })
   }, [])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -51,15 +49,19 @@ export default function HomeNav() {
   }
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-40 backdrop-blur-md">
+    <nav className="fixed left-0 right-0 top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="font-serif text-xl font-bold text-primary">
+        <Link
+          href="/"
+          className="font-serif text-xl font-bold tracking-wide text-primary"
+        >
           Referio
         </Link>
+
         <div className="flex items-center gap-6">
           <Link
             href="/jobs"
-            className="text-sm font-medium text-secondary transition hover:text-primary"
+            className="text-sm font-medium text-secondary transition-colors duration-300 hover:text-primary"
           >
             Browse Jobs
           </Link>
@@ -68,11 +70,11 @@ export default function HomeNav() {
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center gap-1.5 text-sm font-medium text-secondary transition hover:text-primary"
+                className="flex items-center gap-1.5 text-sm font-medium text-secondary transition-colors duration-300 hover:text-primary"
               >
                 {userName}
                 <svg
-                  className={`h-3.5 w-3.5 transition-transform ${menuOpen ? 'rotate-180' : ''}`}
+                  className={`h-3.5 w-3.5 transition-transform duration-300 ${menuOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={2}
@@ -82,24 +84,24 @@ export default function HomeNav() {
                 </svg>
               </button>
               {menuOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-lg border border-border bg-surface py-1 shadow-lg">
+                <div className="absolute right-0 mt-2 w-48 border border-border bg-surface py-1">
                   <Link
                     href="/dashboard"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-secondary transition hover:bg-border hover:text-primary"
+                    className="block px-4 py-2 text-sm text-secondary transition-colors duration-300 hover:text-primary"
                   >
                     My Referrals
                   </Link>
                   <Link
                     href="/profile"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-secondary transition hover:bg-border hover:text-primary"
+                    className="block px-4 py-2 text-sm text-secondary transition-colors duration-300 hover:text-primary"
                   >
                     My Profile
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className="block w-full px-4 py-2 text-left text-sm text-secondary transition hover:bg-border hover:text-primary"
+                    className="block w-full px-4 py-2 text-left text-sm text-secondary transition-colors duration-300 hover:text-primary"
                   >
                     Sign out
                   </button>
@@ -111,7 +113,7 @@ export default function HomeNav() {
           {mounted && (
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="text-secondary transition hover:text-primary"
+              className="text-secondary transition-colors duration-300 hover:text-primary"
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? (

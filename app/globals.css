@@ -9,15 +9,17 @@
   --color-primary: var(--text-primary);
   --color-secondary: var(--text-secondary);
   --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
 }
 
 :root {
-  --bg: #FAFAFA;
-  --surface: #FFFFFF;
-  --border: #E5E5E5;
-  --text-primary: #0A0A0A;
-  --text-secondary: #666666;
+  --bg: #FFFFFF;
+  --surface: #FAFAF8;
+  --border: #E8E4DD;
+  --text-primary: #1A1A1A;
+  --text-secondary: #71706E;
   --accent: #B8962E;
+  --accent-deep: #1B2B3A;
 }
 
 .dark {
@@ -27,6 +29,7 @@
   --text-primary: #F5F5F5;
   --text-secondary: #888888;
   --accent: #C9A84C;
+  --accent-deep: #1B2B3A;
 }
 
 body {

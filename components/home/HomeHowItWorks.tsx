@@ -1,36 +1,58 @@
 const STEPS = [
   {
-    num: '1',
+    label: 'Step One',
     title: 'Browse',
-    desc: 'Explore open roles from vetted companies with fees listed upfront.',
+    description:
+      'Explore senior roles from companies that value introductions. Every listing shows the exact referral fee upfront.',
   },
   {
-    num: '2',
+    label: 'Step Two',
     title: 'Refer',
-    desc: 'Submit your referral in minutes. Tell us why they are right for the role.',
+    description:
+      'Know someone right for the role? Submit their details in under two minutes. We handle the rest.',
   },
   {
-    num: '3',
+    label: 'Step Three',
     title: 'Earn',
-    desc: 'Your fee is paid when your referral is hired. Clear terms, no surprises.',
+    description:
+      'When your referral is hired, you receive the fee. Clear terms, guaranteed payout, no surprises.',
   },
 ]
 
 export default function HomeHowItWorks() {
   return (
-    <section className="border-t border-border px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-16 sm:grid-cols-3">
-          {STEPS.map((step) => (
-            <div key={step.num}>
-              <span className="block font-serif text-[120px] font-bold leading-none text-accent opacity-40">
-                {step.num}
-              </span>
-              <h3 className="mt-4 font-serif text-2xl font-bold text-primary">
+    <section className="px-6 py-28">
+      <div className="mx-auto max-w-5xl">
+        {/* Section label */}
+        <div className="mb-16 flex items-center gap-3">
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-secondary">
+            03
+          </span>
+          <span className="block h-px w-12 bg-accent" />
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-secondary">
+            How It Works
+          </span>
+        </div>
+
+        {/* Steps */}
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {STEPS.map((step, i) => (
+            <div
+              key={step.label}
+              className={`py-8 md:py-0 md:px-10 lg:px-12 ${
+                i > 0
+                  ? 'border-t border-border md:border-t-0 md:border-l md:border-accent/30'
+                  : ''
+              }`}
+            >
+              <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
+                {step.label}
+              </p>
+              <h3 className="mt-4 font-serif text-2xl font-normal text-primary">
                 {step.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-secondary">
-                {step.desc}
+              <p className="mt-3 max-w-[280px] text-sm leading-relaxed text-secondary">
+                {step.description}
               </p>
             </div>
           ))}

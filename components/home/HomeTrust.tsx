@@ -1,7 +1,7 @@
-const ITEMS = [
+const VALUE_PROPS = [
   {
     label: 'Transparent Fees',
-    desc: 'Every role lists the exact referral fee. No hidden terms.',
+    desc: 'Every role lists the exact referral fee. No hidden terms, no negotiation.',
   },
   {
     label: 'Guaranteed Payout',
@@ -9,32 +9,68 @@ const ITEMS = [
   },
   {
     label: 'Senior Roles Only',
-    desc: 'High-value positions from companies serious about talent.',
+    desc: 'High-value positions from companies serious about exceptional talent.',
   },
   {
     label: 'Two-Minute Referral',
-    desc: 'Submit your referral quickly. We handle the rest.',
+    desc: 'Submit your referral quickly. We handle the introduction and follow-through.',
   },
 ]
 
-export default function HomeTrust() {
+export default function HomeTrust({
+  totalFees,
+  jobCount,
+  averageFee,
+}: {
+  totalFees: string
+  jobCount: number
+  averageFee: string
+}) {
   return (
-    <section className="border-t border-border px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {ITEMS.map((item, i) => (
+    <section>
+      {/* Stats bar */}
+      <div className="bg-surface px-6 py-20">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-0">
+          {[
+            { value: String(jobCount), label: 'Roles Available' },
+            { value: averageFee, label: 'Average Fee' },
+            { value: totalFees, label: 'Total Fees Available' },
+          ].map((stat, i) => (
             <div
-              key={item.label}
-              className={`py-6 lg:py-0 lg:px-8 ${
-                i > 0 ? 'border-t border-border sm:border-t lg:border-t-0 lg:border-l' : ''
-              } ${i === 1 ? 'sm:border-t-0 sm:border-l' : ''} ${i === 2 ? 'sm:border-l-0 lg:border-l' : ''} ${i === 3 ? 'sm:border-l lg:border-l' : ''}`}
+              key={stat.label}
+              className={`text-center ${
+                i > 0
+                  ? 'border-t border-accent/20 pt-12 sm:border-t-0 sm:border-l sm:pt-0'
+                  : ''
+              }`}
             >
-              <p className="text-sm font-semibold text-primary">{item.label}</p>
-              <p className="mt-2 text-sm leading-relaxed text-secondary">
-                {item.desc}
+              <p className="font-serif text-4xl text-primary lg:text-5xl">
+                {stat.value}
+              </p>
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.3em] text-secondary">
+                {stat.label}
               </p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Value propositions */}
+      <div className="px-6 py-24">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:gap-16">
+            {VALUE_PROPS.map((item) => (
+              <div key={item.label}>
+                <span className="block h-px w-6 bg-accent" />
+                <h3 className="mt-4 text-sm font-semibold text-primary">
+                  {item.label}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-secondary">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -55,6 +55,10 @@ Referrals are pushed to MagicHire as job applications with source="referio".
 - One retry after 5 seconds on failure, then stop
 - Store all push errors in referrals.magichire_push_error
 
+### Visual Design
+
+- No gradients — flat solid colours only throughout the entire application
+
 ### Code Quality
 
 - No `any` types — strict TypeScript throughout
