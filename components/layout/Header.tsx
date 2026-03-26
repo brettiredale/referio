@@ -52,6 +52,12 @@ export default function Header() {
               >
                 Dashboard
               </Link>
+              <Link
+                href="/profile"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900"
+              >
+                My Profile
+              </Link>
               <button
                 onClick={handleSignOut}
                 className="text-sm text-gray-400 hover:text-gray-600"

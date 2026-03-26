@@ -18,7 +18,7 @@ export default function MagicLinkForm({ jobSlug }: { jobSlug: string }) {
     const { error: authError } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/jobs/${jobSlug}`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://referio.io'}/auth/callback?next=${encodeURIComponent('/jobs/' + jobSlug)}`,
       },
     })
 
