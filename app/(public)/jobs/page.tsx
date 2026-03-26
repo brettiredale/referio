@@ -30,14 +30,16 @@ export default async function JobsPage() {
   const typedJobs = (jobs ?? []) as Job[]
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold text-gray-900">
-        Browse Open Positions
-      </h1>
-      <p className="mt-2 text-gray-500">
-        Find opportunities in your network and earn referral fees
-      </p>
-      <div className="mt-8">
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div className="text-center">
+        <h1 className="font-serif text-4xl font-bold text-primary sm:text-5xl">
+          Browse Open Positions
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-lg text-secondary">
+          Find opportunities in your network and earn referral fees
+        </p>
+      </div>
+      <div className="mt-12">
         <JobSearch jobs={typedJobs} />
       </div>
     </div>
