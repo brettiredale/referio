@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
-import { formatFee } from '@/lib/utils/fee'
+import { formatFee, toUsd, formatUsd } from '@/lib/utils/fee'
 import JobGrid from '@/components/jobs/JobGrid'
 import type { Job } from '@/types'
 
@@ -37,42 +37,85 @@ export default async function HomePage() {
     .select('referral_fee, fee_currency')
     .eq('status', 'active')
 
-  const maxFee = feeStats?.reduce(
-    (max, j) => (j.referral_fee > max ? j.referral_fee : max),
+  const totalFeesUsd = feeStats?.reduce(
+    (sum, j) => sum + toUsd(j.referral_fee, j.fee_currency),
     0
   ) ?? 0
-  const maxFeeCurrency = feeStats?.find((j) => j.referral_fee === maxFee)?.fee_currency ?? 'USD'
-  const maxFeeFormatted = maxFee > 0 ? formatFee(maxFee, maxFeeCurrency) : '$20,000+'
+  const maxFeeUsd = feeStats?.reduce(
+    (max, j) => {
+      const usd = toUsd(j.referral_fee, j.fee_currency)
+      return usd > max ? usd : max
+    },
+    0
+  ) ?? 0
 
   const typedJobs = (jobs ?? []) as Job[]
 
   return (
     <>
       {/* HERO */}
-      <section className="bg-gradient-to-br from-blue-800 to-cyan-600 px-4 py-20 text-white sm:px-6">
-        <div className="mx-auto max-w-4xl text-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-blue-600 to-emerald-500 px-4 py-24 text-white sm:px-6">
+        {/* Decorative blobs */}
+        <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-emerald-400/20 blur-3xl" />
+        <div className="absolute left-1/2 top-1/4 h-64 w-64 -translate-x-1/2 rounded-full bg-yellow-300/10 blur-3xl" />
+
+        <div className="relative mx-auto max-w-4xl text-center">
+          {/* Stats badges */}
           {(jobCount ?? 0) > 0 && (
-            <span className="mb-4 inline-block rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium">
-              {jobCount} roles available
-            </span>
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400">
+                  <span className="inline-flex h-2 w-2 animate-ping rounded-full bg-emerald-400" />
+                </span>
+                {jobCount} {jobCount === 1 ? 'role' : 'roles'} live now
+              </span>
+              {totalFeesUsd > 0 && (
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
+                  <svg className="h-4 w-4 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.736 6.979C9.208 6.193 9.696 6 10 6c.304 0 .792.193 1.264.979a1 1 0 001.715-1.029C12.279 4.784 11.232 4 10 4s-2.279.784-2.979 1.95c-.285.475-.507 1-.67 1.55H6a1 1 0 000 2h.013a9.358 9.358 0 000 1H6a1 1 0 100 2h.351c.163.55.385 1.075.67 1.55C7.721 15.216 8.768 16 10 16s2.279-.784 2.979-1.95a1 1 0 10-1.715-1.029c-.472.786-.96.979-1.264.979-.304 0-.792-.193-1.264-.979a5.387 5.387 0 01-.491-.921H10a1 1 0 100-2H8.003a7.39 7.39 0 010-1H10a1 1 0 100-2H8.245c.155-.347.335-.668.491-.921z" />
+                  </svg>
+                  {formatUsd(totalFeesUsd)} in fees available
+                </span>
+              )}
+            </div>
           )}
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Make introductions and get paid. Guaranteed.
+
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
+            Know great people?
+            <br />
+            <span className="bg-gradient-to-r from-yellow-200 via-emerald-200 to-yellow-200 bg-clip-text text-transparent">
+              Get paid to introduce them.
+            </span>
           </h1>
-          <p className="mt-4 text-lg text-blue-100">
-            Refer great people to great companies. Earn up to{' '}
-            {maxFeeFormatted} when they&apos;re hired.
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">
+            Browse high-value roles, refer someone brilliant, and earn up to{' '}
+            <span className="font-semibold text-white">
+              {maxFeeUsd > 0 ? formatUsd(maxFeeUsd) : '$20,000+'}
+            </span>{' '}
+            when they get hired. No recruiter license needed.
           </p>
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+
+          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/jobs"
-              className="inline-flex items-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+              className="group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-bold text-gray-900 shadow-lg shadow-black/10 transition hover:scale-105 hover:shadow-xl"
             >
-              Browse Jobs &rarr;
+              Browse Jobs
+              <svg
+                className="h-4 w-4 transition group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
             </Link>
             <a
               href="mailto:hello@referio.io"
-              className="inline-flex items-center rounded-lg border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+              className="inline-flex items-center rounded-xl border-2 border-white/30 px-8 py-4 text-base font-bold text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-white/10"
             >
               Post a Job
             </a>
