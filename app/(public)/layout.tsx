@@ -1,5 +1,5 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
+import HomeNav from '@/components/home/HomeNav'
+import HomeFooter from '@/components/home/HomeFooter'
 
 export default function PublicLayout({
   children,
@@ -8,9 +8,9 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <Header />
+      <HomeNav />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <HomeFooter />
     </>
   )
 }

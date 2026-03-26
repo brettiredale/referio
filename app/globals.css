@@ -2,8 +2,35 @@
 
 @theme inline {
   --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-accent: var(--accent);
+}
+
+:root {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --border: #E5E5E5;
+  --text-primary: #0A0A0A;
+  --text-secondary: #666666;
+  --accent: #B8962E;
+}
+
+.dark {
+  --bg: #0A0A0A;
+  --surface: #111111;
+  --border: #222222;
+  --text-primary: #F5F5F5;
+  --text-secondary: #888888;
+  --accent: #C9A84C;
 }
 
 body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
 }
